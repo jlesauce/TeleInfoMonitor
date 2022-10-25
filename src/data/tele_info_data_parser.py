@@ -3,6 +3,8 @@ from typing import Match
 from src.data.tele_info_data import TeleInfoData
 import re
 
+from src.data.teleinfo_format_error import TeleInfoFormatError
+
 
 class TeleInfoDataParser:
     TELE_INFO_MSG_REGEX = r'(\w+)\s+(\S+)\s+(.)'
@@ -35,3 +37,12 @@ class TeleInfoDataParser:
     def _extract_value_from_entry(entry: str) -> (str, str):
         matches = re.search(TeleInfoDataParser.TELE_INFO_MSG_REGEX, entry)
         return matches.group(1), matches.group(2)
+
+    @staticmethod
+    def compute_checksum(entry: str):
+        if not entry:
+            raise ValueError('Input string should not be empty')
+        if not TeleInfoDataParser._validate_entry(entry):
+            raise TeleInfoFormatError(f'Input string does not match teleinfo format: {entry}')
+        s1 = sum([ord(char) if char != ' ' else 0x9 for char in entry[:-1]])
+        return chr((s1 & 0x3F) + 0x20)
