@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 
-logger = logging.getLogger()
+logger = logging.getLogger(__name__)
 
 
 def parse_data_file(file_path: Path) -> list[list[str]]:

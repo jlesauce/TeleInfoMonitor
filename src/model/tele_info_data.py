@@ -1,7 +1,19 @@
-class TeleInfoData:
+class TeleInfoFrame:
 
-    def __init__(self, teleinfo_tags_as_dict: dict[str]):
-        self._update_data(teleinfo_tags_as_dict)
+    def __init__(self, teleinfo_tags_as_dict=None):
+        if teleinfo_tags_as_dict is None:
+            self.meter_identifier = ''
+            self.subscription_type = ''
+            self.subscription_power_in_a = 0
+            self.total_base_index_in_wh = 0
+            self.current_pricing_period = ''
+            self.instantaneous_intensity_in_a = 0
+            self.intensity_max_in_a = 0
+            self.power_consumption_in_va = 0
+            self.off_peak_index = ''
+            self.meter_state_code = ''
+        else:
+            self._update_data(teleinfo_tags_as_dict)
 
     def _update_data(self, teleinfo_data: dict[str]):
         self.meter_identifier = teleinfo_data['ADCO']

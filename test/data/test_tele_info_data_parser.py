@@ -1,7 +1,7 @@
 import pytest
 
-from src.data.tele_info_data_parser import TeleInfoDataParser
-from src.data.teleinfo_format_error import TeleInfoFormatError
+from src.model.tele_info_data_parser import TeleInfoDataParser
+from src.model.teleinfo_format_error import TeleInfoFormatError
 
 
 def test_checksum_with_valid_input():

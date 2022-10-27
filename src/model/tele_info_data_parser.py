@@ -1,9 +1,8 @@
+import re
 from typing import Match
 
-from src.data.tele_info_data import TeleInfoData
-import re
-
-from src.data.teleinfo_format_error import TeleInfoFormatError
+from src.model.tele_info_data import TeleInfoFrame
+from src.model.teleinfo_format_error import TeleInfoFormatError
 
 
 class TeleInfoDataParser:
@@ -12,13 +11,13 @@ class TeleInfoDataParser:
     def __init__(self, frames_: list[list[str]]):
         self.frames = frames_
 
-    def parse(self) -> list[TeleInfoData]:
+    def parse(self) -> list[TeleInfoFrame]:
         tele_info_data_objects = []
         for frame in self.frames:
             tele_info_data_objects.append(self._parse_frame(frame))
         return tele_info_data_objects
 
-    def _parse_frame(self, frame) -> TeleInfoData:
+    def _parse_frame(self, frame) -> TeleInfoFrame:
         tele_info_entries_as_dict = {}
         for entry in frame:
             if self._validate_entry(entry):
@@ -27,7 +26,7 @@ class TeleInfoDataParser:
             else:
                 raise ValueError(f'Invalid teleinfo message: {entry}')
 
-        return TeleInfoData(tele_info_entries_as_dict)
+        return TeleInfoFrame(tele_info_entries_as_dict)
 
     @staticmethod
     def _validate_entry(entry: str) -> Match[str] | None:
