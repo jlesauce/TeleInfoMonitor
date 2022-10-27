@@ -57,6 +57,7 @@ meter.
 ```shell
 $ sudo stty -F /dev/ttyAMA0 1200 sane evenp parenb cs7 -crtscts
 $ sudo cat /dev/ttyAMA0
+$ sudo chmod 666 /dev/ttyAMA0
 ```
 
 This should output the data collected from Linky. If nothing returned, then serial link is probably
