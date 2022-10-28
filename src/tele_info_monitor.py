@@ -3,7 +3,6 @@ import logging
 import os
 from pathlib import Path
 
-from src.io.socket_client import SocketClient
 from src.model.model import Model
 from src.model.tele_info_data import TeleInfoFrame
 from src.model.tele_info_data_parser import TeleInfoDataParser
@@ -29,9 +28,6 @@ def main():
     if args.gui:
         _create_ui(app_model)
 
-    client = SocketClient()
-    client.start_client()
-
 
 def _parse_data_from_file(data_file: Path) -> list[TeleInfoFrame]:
     logger.info(f'data_file specified: {data_file}')
@@ -44,10 +40,6 @@ def _parse_data_from_file(data_file: Path) -> list[TeleInfoFrame]:
 def _create_ui(model: Model):
     view = MainWindow(model)
     controller = Controller(model, view)
-
-    # FIXME This block create random teleinfo frames to populate current plot view
-    controller.start_fake_monitoring()
-
     controller.start_application()
 
 

@@ -1,13 +1,12 @@
 import logging
-import random
 
-from PyQt6 import QtCore
-
+from src.io.socket_client import SocketClient
 from src.model.model import Model
 from src.model.tele_info_data import TeleInfoFrame
 from src.ui.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
 
 
 class Controller:
@@ -15,21 +14,27 @@ class Controller:
     def __init__(self, model: Model, view: MainWindow):
         self.model = model
         self.view = view
-        self.timer = QtCore.QTimer()
 
     def start_application(self):
+        self._start_tele_info_reading_from_server()
         self.view.start_application()
 
-    def start_fake_monitoring(self):
-        logger.info('Start fake monitoring')
-        self.timer.setInterval(1000)
-        self.timer.timeout.connect(self.create_fake_tele_info_frame)
-        self.timer.start()
+    def _start_tele_info_reading_from_server(self):
+        logger.info('Start reception of TeleInfo data from remote server')
+        client = SocketClient()
+        client.subscribe_to_new_messages(self._on_new_tele_info_data_received)
+        client.start_client()
 
-    def create_fake_tele_info_frame(self):
-        logger.debug('Timer notify: create_fake_tele_info_frame')
-        random_frame = TeleInfoFrame()
-        random_frame.instantaneous_intensity_in_a = random.randint(0, 10)
-        self.model.add_new_tele_info_frame(random_frame)
-        # FIXME Replace with Observable model mechanism
-        self.view.update_current_plot_view()
+    def _on_new_tele_info_data_received(self, message):
+        logger.debug(f'Received new message: {message}')
+
+        try:
+            tele_info_frame = TeleInfoFrame(message)
+            logger.info(
+                f'Received new TeleInfo frame: {tele_info_frame.timestamp}: '
+                f'IINST={tele_info_frame.instantaneous_intensity_in_a}')
+
+            self.model.add_new_tele_info_frame(tele_info_frame)
+            self.view.update_current_plot_view()
+        except KeyError as e:
+            logger.error(f'Invalid TeleInfo frame received: {e}')
