@@ -3,6 +3,7 @@ import logging
 import os
 from pathlib import Path
 
+from src.io.socket_client import SocketClient
 from src.model.model import Model
 from src.model.tele_info_data import TeleInfoFrame
 from src.model.tele_info_data_parser import TeleInfoDataParser
@@ -27,6 +28,9 @@ def main():
 
     if args.gui:
         _create_ui(app_model)
+
+    client = SocketClient()
+    client.start_client()
 
 
 def _parse_data_from_file(data_file: Path) -> list[TeleInfoFrame]:

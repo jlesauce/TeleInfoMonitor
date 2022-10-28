@@ -6,7 +6,7 @@ DEFAULT_LOG_LEVEL = logging.DEBUG
 
 def configure_logger(log_file: str):
     formatter = logging.Formatter(
-        '%(asctime)s [%(levelname)s] [%(filename)s:%(lineno)s.%(funcName)s() ]: %(message)s')
+        '%(asctime)s [%(levelname)s] [%(filename)s:%(lineno)s.%(funcName)s]: %(message)s')
     logger = logging.getLogger()
     configure_application_log_level()
 

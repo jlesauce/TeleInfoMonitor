@@ -5,25 +5,33 @@ from datetime import datetime
 
 import serial
 
-from src.model import Model
+from src.io.socket_server import SocketServer
 from src.util.logger import configure_logger
 from src.util.tele_info_helpers import is_valid_tele_info, extract_value_from_entry
 
+APPLICATION_NAME = 'TeleInfo Monitor'
+APPLICATION_SHORT_NAME = 'teleinfomonitor'
+
 logger = logging.getLogger(__name__)
+
+server = SocketServer(port=50007)
 
 
 def main():
-    configure_logger(log_file=f'{Model.APPLICATION_SHORT_NAME}.log')
+    configure_logger(log_file=f'{APPLICATION_SHORT_NAME}.log')
     parse_arguments()
 
-    logger.info(f'Start {Model.APPLICATION_NAME}')
+    logger.info(f'Start {APPLICATION_NAME}')
 
+    server.start_server()
     start_tele_info_reading(create_serial_port())
 
 
 def start_tele_info_reading(serial_port):
     frame = list()
     first_frame_detected = False
+    logger.info(f'Start TeleInfo reading...')
+
     while True:
         entry = read_tele_info_entry(serial_port)
 
@@ -49,7 +57,18 @@ def collect_frame(frame):
         'frame': frame_dict
     }
     json_object = json.dumps(json_entry_element, indent=4)
-    print(json_object)
+    logger.debug(f'Received TeleInfo frame: {flatten_json(json_object)}')
+
+    send_data_to_connected_clients(json_object)
+
+
+def flatten_json(json_str):
+    return json_str.replace('\n', ' ').replace(' ', '')
+
+
+def send_data_to_connected_clients(data: str):
+    if server.is_server_created():
+        server.send_data_to_connected_clients(data)
 
 
 def get_current_timestamp():
@@ -67,6 +86,8 @@ def read_tele_info_entry(serial_port):
 
 
 def create_serial_port():
+    serial_link_file = '/dev/ttyAMA0'
+    logger.info(f'Open serial link {serial_link_file}')
     return serial.Serial('/dev/ttyAMA0', baudrate=1200, bytesize=7, timeout=1,
                          stopbits=serial.STOPBITS_ONE)
 
