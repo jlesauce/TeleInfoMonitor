@@ -1,20 +1,18 @@
 import argparse
-import json
 import logging
-from datetime import datetime
 
-import serial
-
+from src.database.database_client import DataBaseClient
+from src.io.serial_client import SerialLinkClient
 from src.io.socket_server import SocketServer
 from src.util.logger import configure_logger
-from src.util.tele_info_helpers import is_valid_tele_info, extract_value_from_entry
 
 APPLICATION_NAME = 'TeleInfo Reader'
 APPLICATION_SHORT_NAME = 'teleinforeader'
 
 logger = logging.getLogger(__name__)
 
-server = SocketServer(port=50007)
+socket_server = SocketServer(port=50007)
+sql_client = DataBaseClient()
 
 
 def main():
@@ -23,75 +21,28 @@ def main():
 
     logger.info(f'Start {APPLICATION_NAME}')
 
+    sql_client.connect()
+
     if not args.no_server:
-        server.start_server()
+        socket_server.start_server()
 
-    start_tele_info_reading(create_serial_port())
-
-
-def start_tele_info_reading(serial_port):
-    frame = list()
-    first_frame_detected = False
-    logger.info(f'Start TeleInfo reading...')
-
-    while True:
-        entry = read_tele_info_entry(serial_port)
-
-        if is_valid_tele_info(entry):
-            if is_start_of_frame(entry):
-                first_frame_detected = True
-                if len(frame):
-                    collect_frame(frame)
-                    frame.clear()
-
-            if first_frame_detected:
-                frame.append(entry)
+    create_serial_client()
 
 
-def collect_frame(frame):
-    frame_dict = {}
-    for entry in frame:
-        key, value = extract_value_from_entry(entry)
-        frame_dict[key] = value
-
-    json_entry_element = {
-        'timestamp': get_current_timestamp(),
-        'frame': frame_dict
-    }
-    json_object = json.dumps(json_entry_element, indent=4)
-    logger.debug(f'Received TeleInfo frame: {flatten_json(json_object)}')
-
-    send_data_to_connected_clients(json_object)
+def create_serial_client():
+    serial_client = SerialLinkClient('/dev/ttyAMA0')
+    serial_client.subscribe_to_new_messages(on_new_tele_info_data_received)
+    serial_client.start_client()
 
 
-def flatten_json(json_str):
-    return json_str.replace('\n', ' ').replace(' ', '')
+def on_new_tele_info_data_received(data: str):
+    logger.debug(f'Received new serial message:\n{data}')
 
+    if socket_server.is_server_created():
+        socket_server.send_data_to_connected_clients(data)
 
-def send_data_to_connected_clients(data: str):
-    if server.is_server_created():
-        server.send_data_to_connected_clients(data)
-
-
-def get_current_timestamp():
-    time_stamp = datetime.now().timestamp()
-    return str(datetime.fromtimestamp(time_stamp))
-
-
-def is_start_of_frame(entry):
-    return entry.startswith('ADCO ')
-
-
-def read_tele_info_entry(serial_port):
-    # Read data out of the buffer until a carriage return / new line is found
-    return serial_port.readline().decode('Ascii').strip()
-
-
-def create_serial_port():
-    serial_link_file = '/dev/ttyAMA0'
-    logger.info(f'Open serial link {serial_link_file}')
-    return serial.Serial('/dev/ttyAMA0', baudrate=1200, bytesize=7, timeout=1,
-                         stopbits=serial.STOPBITS_ONE)
+    if sql_client.is_connected():
+        sql_client.insert_new_tele_info_frame(data)
 
 
 def parse_arguments():

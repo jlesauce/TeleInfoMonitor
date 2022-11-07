@@ -135,3 +135,14 @@ create table teleinfoframes
         primary key (timestamp)
 ) comment 'Table containing the teleinfo frames'
 ```
+
+#### Get size of database
+
+```mariadb
+SELECT table_schema                                            'teleinfodb',
+       SUM(data_length + index_length)                         'Size in Bytes',
+       ROUND(SUM(data_length + index_length) / 1024 / 1024, 2) 'Size in MiB'
+FROM information_schema.tables
+WHERE table_schema = 'teleinfodb'
+GROUP BY table_schema;
+```
