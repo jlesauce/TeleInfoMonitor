@@ -9,8 +9,8 @@ from src.io.socket_server import SocketServer
 from src.util.logger import configure_logger
 from src.util.tele_info_helpers import is_valid_tele_info, extract_value_from_entry
 
-APPLICATION_NAME = 'TeleInfo Monitor'
-APPLICATION_SHORT_NAME = 'teleinfomonitor'
+APPLICATION_NAME = 'TeleInfo Reader'
+APPLICATION_SHORT_NAME = 'teleinforeader'
 
 logger = logging.getLogger(__name__)
 
@@ -19,11 +19,13 @@ server = SocketServer(port=50007)
 
 def main():
     configure_logger(log_file=f'{APPLICATION_SHORT_NAME}.log')
-    parse_arguments()
+    args = parse_arguments()
 
     logger.info(f'Start {APPLICATION_NAME}')
 
-    server.start_server()
+    if not args.no_server:
+        server.start_server()
+
     start_tele_info_reading(create_serial_port())
 
 
@@ -100,6 +102,7 @@ def parse_arguments():
 def create_argument_parser():
     parser = argparse.ArgumentParser(description='Application used to read TeleInfo data frames from serial link '
                                                  'connected to Enedis Linky meter equipment.')
+    parser.add_argument('--no-server', action='store_true', help='Do not start the server')
 
     return parser
 

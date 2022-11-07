@@ -5,7 +5,7 @@ import threading
 from observable import Observable
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 
 
 class SocketClient:

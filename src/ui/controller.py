@@ -6,7 +6,7 @@ from src.model.tele_info_data import TeleInfoFrame
 from src.ui.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.INFO)
+logger.setLevel(logging.DEBUG)
 
 
 class Controller:
@@ -26,10 +26,9 @@ class Controller:
         client.start_client()
 
     def _on_new_tele_info_data_received(self, message):
-        logger.debug(f'Received new message: {message}')
-
         try:
             tele_info_frame = TeleInfoFrame(message)
+            logger.debug(f'Received new message: {tele_info_frame}')
             logger.info(
                 f'Received new TeleInfo frame: {tele_info_frame.timestamp}: '
                 f'IINST={tele_info_frame.instantaneous_intensity_in_a}')
