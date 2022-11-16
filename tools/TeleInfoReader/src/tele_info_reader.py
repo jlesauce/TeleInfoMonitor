@@ -8,10 +8,11 @@ from src.util.logger import configure_logger
 
 APPLICATION_NAME = 'TeleInfo Reader'
 APPLICATION_SHORT_NAME = 'teleinforeader'
+SOCKET_SERVER_PORT = 50007
 
 logger = logging.getLogger(__name__)
 
-socket_server = SocketServer(port=50007)
+socket_server = SocketServer(port=SOCKET_SERVER_PORT)
 sql_client = DataBaseClient()
 
 
@@ -52,8 +53,11 @@ def parse_arguments():
 
 def create_argument_parser():
     parser = argparse.ArgumentParser(description='Application used to read TeleInfo data frames from serial link '
-                                                 'connected to Enedis Linky meter equipment.')
-    parser.add_argument('--no-server', action='store_true', help='Do not start the server')
+                                                 'connected to Enedis Linky meter equipment. The application then '
+                                                 'provides the data using a socket server on port '
+                                                 + str(SOCKET_SERVER_PORT) + '. The data are also stored on a local' +
+                                                 'database (' + sql_client.get_database_name() + ').')
+    parser.add_argument('--no-server', action='store_true', help='Do not start the server for remote data access.')
 
     return parser
 

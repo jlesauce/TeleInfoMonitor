@@ -1,6 +1,4 @@
-import json
 import logging
-import sys
 
 import mariadb
 
@@ -20,7 +18,6 @@ class DataBaseClient:
         self.connection = None
 
     def connect(self):
-        # Try example from: https://mariadb.com/fr/resources/blog/how-to-connect-python-programs-to-mariadb/
         try:
             self.connection = mariadb.connect(
                 user=self._user,
@@ -38,7 +35,7 @@ class DataBaseClient:
         try:
             tele_info_frame = TeleInfoFrame(data)
 
-            logger.info(f'Insert new teleinfo frame into database: key={tele_info_frame.timestamp_db}')
+            logger.debug(f'Insert new teleinfo frame into database: key={tele_info_frame.timestamp_db}')
             sql_request = self._prepare_insert_frame_request(tele_info_frame)
             cursor = self.connection.cursor()
 
@@ -91,3 +88,6 @@ class DataBaseClient:
                   f"'{tele_info_frame.meter_state_code}'" \
                   ')'
         return request
+
+    def get_database_name(self) -> str:
+        return self._database_name
