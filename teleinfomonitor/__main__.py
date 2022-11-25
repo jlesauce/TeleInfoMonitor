@@ -15,8 +15,8 @@ logger = logging.getLogger(__name__)
 
 
 def main():
-    configure_logger(log_file=f'{Model.APPLICATION_SHORT_NAME}.log')
     args = _parse_arguments()
+    configure_logger(log_level=logging.getLevelName(args.log_level.upper()))
 
     app_model = Model()
     logger.info(f'Start {app_model.application_name}')
@@ -53,7 +53,10 @@ def _create_argument_parser():
         description='Application used to monitor TeleInfo serial model from Enedis Linky meter equipment.')
     parser.add_argument('--gui', action='store_true', help='Start the graphical user interface')
     parser.add_argument('--data_file', metavar='FILE', type=lambda x: _is_valid_file(parser, x),
-                        help='File containing TeleInfo model.')
+                        help='File containing TeleInfo data (used for debug)')
+    parser.add_argument('--log-level', dest="log_level",
+                        choices=['debug', 'info', 'warn', 'error', 'fatal'], default='info',
+                        help="Set the application log level")
     return parser
 
 
