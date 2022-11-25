@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "TeleInfoMonitor"
+version = "0.0.0"
+description = """
+Application used to collect the user data transmitted by Linky meter system (TeleInfo) from Enedis and acquired by \
+TeleInfoReader application.
+"""
+authors = ["Julien LE SAUCE <julien.lesauce@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/jlesauce/TeleInfoMonitor"
+repository = "https://github.com/jlesauce/TeleInfoMonitor"
+keywords = ["teleinfo", "enedis", "linky"]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Environment :: X11 Applications :: Qt",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Topic :: Home Automation",
+    "Topic :: Utilities"
+]
+packages = [
+    { include = "teleinfomonitor" },
+]
+include = [
+    "LICENSE", "Changelog.md"
+]
+
+[tool.poetry.scripts]
+teleinforeader = 'tele_info_monitor.__main__:main'
+
+[tool.poetry.dependencies]
+PyQt6 = "~=6.4.0"
+matplotlib = ">=3.6.1"
+observable = "~=1.0.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.2"
+coverage = "^6.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

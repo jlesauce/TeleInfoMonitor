@@ -2,8 +2,8 @@ import sys
 
 from PyQt6.QtWidgets import QApplication, QMainWindow
 
-from src.model.model import Model
-from src.ui.current_plot_view import CurrentPlotView
+from teleinfomonitor.model.model import Model
+from teleinfomonitor.ui.current_plot_view import CurrentPlotView
 
 
 class MainWindow:

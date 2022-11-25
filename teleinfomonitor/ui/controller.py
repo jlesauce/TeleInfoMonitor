@@ -1,9 +1,9 @@
 import logging
 
-from src.io.socket_client import SocketClient
-from src.model.model import Model
-from src.model.tele_info_data import TeleInfoFrame
-from src.ui.main_window import MainWindow
+from teleinfomonitor.io.socket_client import SocketClient
+from teleinfomonitor.model.model import Model
+from teleinfomonitor.model.tele_info_data import TeleInfoFrame
+from teleinfomonitor.ui.main_window import MainWindow
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)

@@ -3,12 +3,12 @@ import logging
 import os
 from pathlib import Path
 
-from src.model.model import Model
-from src.model.tele_info_data import TeleInfoFrame
-from src.model.tele_info_data_parser import TeleInfoDataParser
-from src.ui.controller import Controller
-from src.util.data_file_helpers import parse_data_file
-from src.util.logger import configure_logger
+from teleinfomonitor.model.model import Model
+from teleinfomonitor.model.tele_info_data import TeleInfoFrame
+from teleinfomonitor.model.tele_info_data_parser import TeleInfoDataParser
+from teleinfomonitor.ui.controller import Controller
+from teleinfomonitor.util.data_file_helpers import parse_data_file
+from teleinfomonitor.util.logger import configure_logger
 from ui.main_window import MainWindow
 
 logger = logging.getLogger(__name__)

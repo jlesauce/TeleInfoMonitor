@@ -1,8 +1,8 @@
 import re
 from typing import Match
 
-from src.model.tele_info_data import TeleInfoFrame
-from src.model.teleinfo_format_error import TeleInfoFormatError
+from teleinfomonitor.model.tele_info_data import TeleInfoFrame
+from teleinfomonitor.model.teleinfo_format_error import TeleInfoFormatError
 
 
 class TeleInfoDataParser:

@@ -1,4 +1,4 @@
-from src.model.tele_info_data import TeleInfoFrame
+from teleinfomonitor.model.tele_info_data import TeleInfoFrame
 
 
 class Model:

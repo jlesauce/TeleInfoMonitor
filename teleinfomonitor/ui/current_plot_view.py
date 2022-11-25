@@ -3,7 +3,7 @@ import logging
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
-from src.model.model import Model
+from teleinfomonitor.model.model import Model
 
 logger = logging.getLogger(__name__)
 
