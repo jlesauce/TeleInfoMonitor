@@ -1,7 +1,10 @@
 import argparse
 import logging
 import os
+import sys
 from pathlib import Path
+
+from PyQt6.QtWidgets import QApplication
 
 from teleinfomonitor.model.model import Model
 from teleinfomonitor.model.tele_info_data import TeleInfoFrame
@@ -25,8 +28,7 @@ def main():
         tele_info_frames = _parse_data_from_file(args.data_file)
         app_model.set_tele_info_frames(tele_info_frames)
 
-    if args.gui:
-        _create_ui(app_model)
+    _create_ui(app_model)
 
 
 def _parse_data_from_file(data_file: Path) -> list[TeleInfoFrame]:
@@ -38,9 +40,11 @@ def _parse_data_from_file(data_file: Path) -> list[TeleInfoFrame]:
 
 
 def _create_ui(model: Model):
-    view = MainWindow(model)
+    application = QApplication(sys.argv[:1])
+    view = MainWindow(model, application)
     controller = Controller(model, view)
     controller.start_application()
+    sys.exit(application.exec())
 
 
 def _parse_arguments():
@@ -50,13 +54,13 @@ def _parse_arguments():
 
 def _create_argument_parser():
     parser = argparse.ArgumentParser(
-        description='Application used to monitor TeleInfo serial model from Enedis Linky meter equipment.')
-    parser.add_argument('--gui', action='store_true', help='Start the graphical user interface')
-    parser.add_argument('--data_file', metavar='FILE', type=lambda x: _is_valid_file(parser, x),
-                        help='File containing TeleInfo data (used for debug)')
+        description='Application used to collect the user data transmitted by Linky meter system (TeleInfo) from Enedis'
+                    ' and acquired by TeleInfoReader application.')
     parser.add_argument('--log-level', dest="log_level",
                         choices=['debug', 'info', 'warn', 'error', 'fatal'], default='info',
                         help="Set the application log level")
+    parser.add_argument('--data_file', metavar='FILE', type=lambda x: _is_valid_file(parser, x),
+                        help='File containing TeleInfo data (used for debug)')
     return parser
 
 
