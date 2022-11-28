@@ -26,7 +26,8 @@ class CurrentPlotView(FigureCanvasQTAgg):
         self.update_plot()
 
     def update_plot(self):
-        logger.debug(f'Update plot: model contains {len(self.model.tele_info_frames)} frames')
+        if len(self.model.tele_info_frames) > 0:
+            logger.debug(f'Update plot: model contains {len(self.model.tele_info_frames)} frames')
 
         self.xdata = list(range(len(self.model.tele_info_frames)))
         self.ydata = [frame.instantaneous_intensity_in_a for frame in self.model.tele_info_frames]
@@ -35,12 +36,3 @@ class CurrentPlotView(FigureCanvasQTAgg):
         if self.xdata and self.ydata:
             self.axes.plot(self.xdata, self.ydata, 'r')
         self.draw()
-
-        # import numpy as np
-        # import matplotlib.mlab as mlab
-        # import matplotlib.pyplot as plt
-        #
-        # x = [21, 22, 23, 4, 5, 6, 77, 8, 9, 10, 31, 32, 33, 34, 35, 36, 37, 18, 49, 50, 100]
-        # num_bins = 5
-        # n, bins, patches = plt.hist(x, num_bins, facecolor='blue', alpha=0.5)
-        # plt.show()
