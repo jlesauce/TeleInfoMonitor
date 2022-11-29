@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 class SocketClient:
     OBSERVABLE_NEW_MASSAGE_EVENT = 'new_message'
 
-    def __init__(self, host_name='192.168.1.117', port=50007):
+    def __init__(self, host_name='127.0.0.1', port=50000):
         self.host_name = host_name
         self.port = port
         self._client_thread = threading.Thread(target=self._run_client)

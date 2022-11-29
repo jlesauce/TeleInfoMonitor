@@ -6,6 +6,7 @@ from observable import Observable
 
 from teleinfomonitor.model.model import Model
 from teleinfomonitor.ui.current_plot_view import CurrentPlotView
+from teleinfomonitor.ui.settings_dialog import SettingsDialog
 
 logger = logging.getLogger(__name__)
 
@@ -45,6 +46,10 @@ class MainWindow(QMainWindow):
         logger.debug(f'Notify {self.EVENT_ID_ON_DISCONNECT_BUTTON_CLICKED} received')
         self._observable.trigger(self.EVENT_ID_ON_DISCONNECT_BUTTON_CLICKED)
 
+    def _on_click_settings_menu_item(self):
+        logger.debug(f'Notify settings button clicked')
+        SettingsDialog(self.model, self).exec()
+
     def _create_ui(self):
         self.setWindowTitle(self.model.application_name)
         self.resize(500, 500)
@@ -71,26 +76,34 @@ class MainWindow(QMainWindow):
     def _create_file_menu(self, menu_bar: QMenuBar):
         file_menu = menu_bar.addMenu('&File')
 
-        file_menu.addAction(self._create_connect_action())
-        file_menu.addAction(self._create_disconnect_action())
-        file_menu.addAction(self._create_exit_action())
+        file_menu.addAction(self._create_connect_menu_action())
+        file_menu.addAction(self._create_disconnect_menu_action())
+        file_menu.addAction(self._create_settings_menu_action())
+        file_menu.addAction(self._create_exit_menu_action())
 
     # noinspection PyUnresolvedReferences
-    def _create_connect_action(self) -> QAction:
+    def _create_connect_menu_action(self) -> QAction:
         connect_action = QAction('&Connect', self)
         connect_action.setStatusTip('Connect to remote server')
         connect_action.triggered.connect(self._on_click_connect_menu_item)
         return connect_action
 
     # noinspection PyUnresolvedReferences
-    def _create_disconnect_action(self) -> QAction:
+    def _create_disconnect_menu_action(self) -> QAction:
         disconnect_action = QAction('&Disconnect', self)
         disconnect_action.setStatusTip('Disconnect from remote server')
         disconnect_action.triggered.connect(self._on_click_disconnect_menu_item)
         return disconnect_action
 
     # noinspection PyUnresolvedReferences
-    def _create_exit_action(self) -> QAction:
+    def _create_settings_menu_action(self) -> QAction:
+        settings_action = QAction('&Settings', self)
+        settings_action.setStatusTip('Application settings')
+        settings_action.triggered.connect(self._on_click_settings_menu_item)
+        return settings_action
+
+    # noinspection PyUnresolvedReferences
+    def _create_exit_menu_action(self) -> QAction:
         exit_action = QAction('&Exit', self)
         exit_action.setShortcut('Ctrl+Q')
         exit_action.setStatusTip('Exit application')

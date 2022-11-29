@@ -1,5 +1,7 @@
 import logging
 
+from PyQt6.QtCore import QSettings
+
 from teleinfomonitor.io.socket_client import SocketClient
 from teleinfomonitor.model.model import Model
 from teleinfomonitor.model.tele_info_data import TeleInfoFrame
@@ -25,9 +27,15 @@ class Controller:
     def _start_tele_info_transmission_from_server(self):
         if not self.tele_info_transmission_client:
             logger.info('Start reception of TeleInfo data from remote server')
-            self.tele_info_transmission_client = SocketClient()
-            self.tele_info_transmission_client.subscribe_to_new_messages(self._on_new_tele_info_data_received)
-            self.tele_info_transmission_client.start_client()
+
+            try:
+                settings: QSettings = self.model.settings
+                self.tele_info_transmission_client = SocketClient(host_name=settings.value('server/ip_address'),
+                                                                  port=settings.value('server/port'))
+                self.tele_info_transmission_client.subscribe_to_new_messages(self._on_new_tele_info_data_received)
+                self.tele_info_transmission_client.start_client()
+            except Exception as e:
+                logger.error(e)
         else:
             logger.warning('Reception of TeleInfo data is already running')
 
@@ -50,6 +58,7 @@ class Controller:
             logger.error(f'Invalid TeleInfo frame received: {e}')
 
     def _on_close_application_event(self, _):
+        logger.info('Close application')
         self._stop_tele_info_transmission_from_server()
 
     def _on_connect_button_clicked(self):

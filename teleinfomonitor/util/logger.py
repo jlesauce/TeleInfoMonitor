@@ -33,3 +33,4 @@ def configure_application_log_level(log_level):
     logger = logging.getLogger()
     logger.setLevel(log_level)
     logging.getLogger('matplotlib').setLevel(logging.ERROR)
+    logging.getLogger('PyQt6').setLevel(logging.ERROR)
