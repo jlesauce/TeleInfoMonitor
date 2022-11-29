@@ -1,5 +1,4 @@
 import re
-from typing import Match
 
 from teleinfomonitor.model.tele_info_data import TeleInfoFrame
 from teleinfomonitor.model.teleinfo_format_error import TeleInfoFormatError
@@ -29,7 +28,7 @@ class TeleInfoDataParser:
         return TeleInfoFrame(tele_info_entries_as_dict)
 
     @staticmethod
-    def _validate_entry(entry: str) -> Match[str] | None:
+    def _validate_entry(entry: str):
         return re.match(TeleInfoDataParser.TELE_INFO_MSG_REGEX, entry)
 
     @staticmethod
