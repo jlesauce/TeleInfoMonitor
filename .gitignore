@@ -80,3 +80,6 @@ venv.bak/
 # JetBrains PyCharm
 **/.idea/workspace.xml
 **/.idea/tasks.xml
+
+# QtCreator
+*.autosave

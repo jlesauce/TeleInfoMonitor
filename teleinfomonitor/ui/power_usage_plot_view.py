@@ -8,7 +8,7 @@ from teleinfomonitor.model.model import Model
 logger = logging.getLogger(__name__)
 
 
-class CurrentPlotView(FigureCanvasQTAgg):
+class PowerUsagePlotView(FigureCanvasQTAgg):
     DEFAULT_NUM_OF_X_ELEMENTS = 50
 
     def __init__(self, model: Model):
@@ -16,14 +16,11 @@ class CurrentPlotView(FigureCanvasQTAgg):
 
         figure = Figure()
         self.axes = figure.add_subplot(111)
-        super(CurrentPlotView, self).__init__(figure)
+        super(PowerUsagePlotView, self).__init__(figure)
 
         self.xdata = list(range(self.DEFAULT_NUM_OF_X_ELEMENTS))
         intensity_values = [frame.instantaneous_intensity_in_a for frame in self.model.tele_info_frames]
         self.ydata = intensity_values[:50]
-
-    def create_ui(self):
-        self.update_plot()
 
     def update_plot(self):
         if len(self.model.tele_info_frames) > 0:

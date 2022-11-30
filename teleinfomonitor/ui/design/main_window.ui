@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>main_window</class>
+ <widget class="QMainWindow" name="main_window">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1000</width>
+    <height>600</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>MainWindow</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="0" column="0">
+     <widget class="QTabWidget" name="tab_widget">
+      <property name="currentIndex">
+       <number>1</number>
+      </property>
+      <widget class="QWidget" name="tab_power_usage">
+       <attribute name="title">
+        <string>Home Power Usage</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_2">
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="home_usage_layout">
+          <item>
+           <widget class="QCalendarWidget" name="calendar_widget"/>
+          </item>
+          <item>
+           <widget class="QGraphicsView" name="selected_day_graphic_view"/>
+          </item>
+         </layout>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="tab_real_time_data">
+       <attribute name="title">
+        <string>Real Time data</string>
+       </attribute>
+       <layout class="QGridLayout" name="gridLayout_3">
+        <item row="0" column="0">
+         <layout class="QHBoxLayout" name="real_time_reception_control_layout">
+          <item>
+           <widget class="QPushButton" name="start_teleinfo_reception_button">
+            <property name="text">
+             <string>Start Reception</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="stop_teleinfo_reception_button">
+            <property name="text">
+             <string>Stop</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="teleinfo_reception_status_label">
+            <property name="text">
+             <string>Reception Stopped</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </item>
+        <item row="1" column="0">
+         <layout class="QVBoxLayout" name="real_time_data_layout"/>
+        </item>
+       </layout>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QMenuBar" name="menu_bar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1000</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menu_file">
+    <property name="title">
+     <string>File</string>
+    </property>
+    <addaction name="menu_action_settings"/>
+    <addaction name="menu_action_exit"/>
+   </widget>
+   <addaction name="menu_file"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actiontest">
+   <property name="text">
+    <string>test</string>
+   </property>
+  </action>
+  <action name="disconnect_menu_action">
+   <property name="text">
+    <string>disconnect_menu_action</string>
+   </property>
+  </action>
+  <action name="connect_menu_action">
+   <property name="text">
+    <string>connect_menu_action</string>
+   </property>
+  </action>
+  <action name="settings_menu_action">
+   <property name="text">
+    <string>settings_menu_action</string>
+   </property>
+  </action>
+  <action name="exit_menu_action">
+   <property name="text">
+    <string>exit_menu_action</string>
+   </property>
+  </action>
+  <action name="actionConnect">
+   <property name="text">
+    <string>Connect</string>
+   </property>
+  </action>
+  <action name="connect_menu">
+   <property name="text">
+    <string>Connect</string>
+   </property>
+  </action>
+  <action name="actiondfvd">
+   <property name="text">
+    <string>dfvd</string>
+   </property>
+  </action>
+  <action name="actionconnect_menu_action">
+   <property name="text">
+    <string>connect_menu_action</string>
+   </property>
+  </action>
+  <action name="menu_action_connect">
+   <property name="text">
+    <string>Connect</string>
+   </property>
+   <property name="statusTip">
+    <string>Connect to remote server</string>
+   </property>
+  </action>
+  <action name="menu_action_disconnect">
+   <property name="text">
+    <string>Disconnect</string>
+   </property>
+   <property name="statusTip">
+    <string>Disconnect from remote server</string>
+   </property>
+  </action>
+  <action name="menu_action_settings">
+   <property name="text">
+    <string>Settings</string>
+   </property>
+   <property name="statusTip">
+    <string>Application settings</string>
+   </property>
+  </action>
+  <action name="menu_action_exit">
+   <property name="text">
+    <string>Exit</string>
+   </property>
+   <property name="statusTip">
+    <string>Exit application</string>
+   </property>
+   <property name="shortcut">
+    <string>Ctrl+Q</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

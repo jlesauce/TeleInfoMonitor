@@ -1,11 +1,13 @@
 import logging
 
-from PyQt6.QtGui import QAction
-from PyQt6.QtWidgets import QApplication, QMainWindow, QMenuBar
+from PyQt6 import uic
+from PyQt6.QtWidgets import QApplication, QMainWindow
 from observable import Observable
 
 from teleinfomonitor.model.model import Model
-from teleinfomonitor.ui.current_plot_view import CurrentPlotView
+from teleinfomonitor.ui.design.ui_resource_file import UiResourceFile
+from teleinfomonitor.ui.monthly_power_usage_tab_view import MonthlyPowerUsageTabView
+from teleinfomonitor.ui.real_time_data_tab_view import RealTimeDataTabView
 from teleinfomonitor.ui.settings_dialog import SettingsDialog
 
 logger = logging.getLogger(__name__)
@@ -13,16 +15,17 @@ logger = logging.getLogger(__name__)
 
 class MainWindow(QMainWindow):
     EVENT_ID_ON_CLOSE_BUTTON_CLICKED = 'close_event'
-    EVENT_ID_ON_CONNECT_BUTTON_CLICKED = 'connect_event'
-    EVENT_ID_ON_DISCONNECT_BUTTON_CLICKED = 'disconnect_event'
 
     def __init__(self, model: Model, application: QApplication):
         super().__init__()
-        self.model = model
-        self.application = application
-        self.current_plot_view = CurrentPlotView(self.model)
+        self._model = model
+        self._application = application
         self._observable = Observable()
-        self._create_ui()
+
+        uic.loadUi(UiResourceFile('main_window.ui').path, self)
+        self._monthly_power_usage_tab_view = MonthlyPowerUsageTabView(self, self._model, self._observable)
+        self._real_time_data_tab_view = RealTimeDataTabView(self, self._model, self._observable)
+        self._init_ui()
 
     def start_application(self):
         self.show()
@@ -35,77 +38,24 @@ class MainWindow(QMainWindow):
         self._observable.trigger(self.EVENT_ID_ON_CLOSE_BUTTON_CLICKED, event)
         event.accept()
 
-    def update_current_plot_view(self):
-        self.current_plot_view.update_plot()
+    def update_real_time_data_plot_view(self):
+        self._real_time_data_tab_view.update_real_time_data_plot()
 
-    def _on_click_connect_menu_item(self):
-        logger.debug(f'Notify {self.EVENT_ID_ON_CONNECT_BUTTON_CLICKED} received')
-        self._observable.trigger(self.EVENT_ID_ON_CONNECT_BUTTON_CLICKED)
+    def set_connected_state(self):
+        self._real_time_data_tab_view.set_connected_state()
 
-    def _on_click_disconnect_menu_item(self):
-        logger.debug(f'Notify {self.EVENT_ID_ON_DISCONNECT_BUTTON_CLICKED} received')
-        self._observable.trigger(self.EVENT_ID_ON_DISCONNECT_BUTTON_CLICKED)
+    def set_disconnected_state(self):
+        self._real_time_data_tab_view.set_disconnected_state()
+
+    def _init_ui(self):
+        self.setWindowTitle(self._model.application_name)
+        self._init_menu_actions()
+
+    # noinspection PyUnresolvedReferences
+    def _init_menu_actions(self):
+        self.menu_action_settings.triggered.connect(self._on_click_settings_menu_item)
+        self.menu_action_exit.triggered.connect(QApplication.instance().quit)
 
     def _on_click_settings_menu_item(self):
         logger.debug(f'Notify settings button clicked')
-        SettingsDialog(self.model, self).exec()
-
-    def _create_ui(self):
-        self.setWindowTitle(self.model.application_name)
-        self.resize(500, 500)
-        self._center()
-
-        self._create_menu_bar()
-
-        self.current_plot_view.create_ui()
-        self.setCentralWidget(self.current_plot_view)
-
-    def _center(self):
-        frame_geometry = self.frameGeometry()
-        screen = self.application.primaryScreen()
-        center_point = screen.availableGeometry().center()
-        frame_geometry.moveCenter(center_point)
-        self.move(frame_geometry.topLeft())
-
-    def _create_menu_bar(self):
-        self.statusBar()
-
-        menu_bar = self.menuBar()
-        self._create_file_menu(menu_bar)
-
-    def _create_file_menu(self, menu_bar: QMenuBar):
-        file_menu = menu_bar.addMenu('&File')
-
-        file_menu.addAction(self._create_connect_menu_action())
-        file_menu.addAction(self._create_disconnect_menu_action())
-        file_menu.addAction(self._create_settings_menu_action())
-        file_menu.addAction(self._create_exit_menu_action())
-
-    # noinspection PyUnresolvedReferences
-    def _create_connect_menu_action(self) -> QAction:
-        connect_action = QAction('&Connect', self)
-        connect_action.setStatusTip('Connect to remote server')
-        connect_action.triggered.connect(self._on_click_connect_menu_item)
-        return connect_action
-
-    # noinspection PyUnresolvedReferences
-    def _create_disconnect_menu_action(self) -> QAction:
-        disconnect_action = QAction('&Disconnect', self)
-        disconnect_action.setStatusTip('Disconnect from remote server')
-        disconnect_action.triggered.connect(self._on_click_disconnect_menu_item)
-        return disconnect_action
-
-    # noinspection PyUnresolvedReferences
-    def _create_settings_menu_action(self) -> QAction:
-        settings_action = QAction('&Settings', self)
-        settings_action.setStatusTip('Application settings')
-        settings_action.triggered.connect(self._on_click_settings_menu_item)
-        return settings_action
-
-    # noinspection PyUnresolvedReferences
-    def _create_exit_menu_action(self) -> QAction:
-        exit_action = QAction('&Exit', self)
-        exit_action.setShortcut('Ctrl+Q')
-        exit_action.setStatusTip('Exit application')
-        exit_action.triggered.connect(QApplication.instance().quit)
-        return exit_action
+        SettingsDialog(self._model, self).exec()
