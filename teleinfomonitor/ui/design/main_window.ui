@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1000</width>
+    <width>1200</width>
     <height>600</height>
    </rect>
   </property>
@@ -18,7 +18,7 @@
     <item row="0" column="0">
      <widget class="QTabWidget" name="tab_widget">
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="tab_power_usage">
        <attribute name="title">
@@ -30,10 +30,10 @@
           <item>
            <widget class="QCalendarWidget" name="calendar_widget"/>
           </item>
-          <item>
-           <widget class="QGraphicsView" name="selected_day_graphic_view"/>
-          </item>
          </layout>
+        </item>
+        <item row="0" column="1">
+         <layout class="QVBoxLayout" name="day_power_usage_layout"/>
         </item>
        </layout>
       </widget>
@@ -81,7 +81,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1000</width>
+     <width>1200</width>
      <height>21</height>
     </rect>
    </property>

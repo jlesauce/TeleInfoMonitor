@@ -17,7 +17,7 @@ class RealTimeDataTabView:
         self.parent = parent_window
         self.model = model
         self.listeners = listeners
-        self.power_usage_plot_view = PowerUsagePlotView(self.model)
+        self.power_usage_plot_view = PowerUsagePlotView(self.model.tele_info_frames)
 
         self._init_ui()
 
@@ -25,12 +25,12 @@ class RealTimeDataTabView:
     def _init_ui(self):
         self.parent.real_time_data_layout.addWidget(self.power_usage_plot_view)
         self._init_real_time_data_control_panel_actions()
-        self.power_usage_plot_view.update_plot()
+        self.power_usage_plot_view.update_plot(self.model.tele_info_frames)
         self.set_disconnected_state()
 
     def update_real_time_data_plot(self):
         if self.power_usage_plot_view:
-            self.power_usage_plot_view.update_plot()
+            self.power_usage_plot_view.update_plot(self.model.tele_info_frames)
 
     # noinspection PyUnresolvedReferences
     def set_connected_state(self):
