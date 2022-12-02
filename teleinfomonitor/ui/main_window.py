@@ -1,10 +1,12 @@
 import logging
+from typing import List
 
 from PyQt6 import uic
 from PyQt6.QtWidgets import QApplication, QMainWindow
 from observable import Observable
 
 from teleinfomonitor.model.model import Model
+from teleinfomonitor.model.tele_info_data import TeleInfoFrame
 from teleinfomonitor.ui.design.ui_resource_file import UiResourceFile
 from teleinfomonitor.ui.monthly_power_usage_tab_view import MonthlyPowerUsageTabView
 from teleinfomonitor.ui.real_time_data_tab_view import RealTimeDataTabView
@@ -41,11 +43,20 @@ class MainWindow(QMainWindow):
     def update_real_time_data_plot_view(self):
         self._real_time_data_tab_view.update_real_time_data_plot()
 
-    def set_connected_state(self):
+    def update_day_power_usage_plot_view(self, tele_info_frames: List[TeleInfoFrame]):
+        self._monthly_power_usage_tab_view.update_day_power_usage_plot(tele_info_frames)
+
+    def set_real_time_data_running_state(self):
         self._real_time_data_tab_view.set_connected_state()
 
-    def set_disconnected_state(self):
+    def set_real_time_data_stopped_state(self):
         self._real_time_data_tab_view.set_disconnected_state()
+
+    def set_connected_to_database_state(self):
+        self._monthly_power_usage_tab_view.set_connected_state()
+
+    def set_disconnected_from_database_state(self):
+        self._monthly_power_usage_tab_view.set_disconnected_state()
 
     def _init_ui(self):
         self.setWindowTitle(self._model.application_name)

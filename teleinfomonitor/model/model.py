@@ -22,3 +22,7 @@ class Model:
     def _init_settings(self):
         self.settings.setValue('server/ip_address', '192.168.1.117')
         self.settings.setValue('server/port', 50007)
+        self.settings.setValue('database/name', 'teleinfodb')
+        self.settings.setValue('database/user', 'teleinfomonitor')
+        self.settings.setValue('database/password', 'jacqueschirac')
+        self.settings.setValue('database/port', 3306)

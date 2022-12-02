@@ -1,4 +1,6 @@
 import json
+import sys
+from typing import Tuple
 
 
 class TeleInfoFrame:
@@ -18,6 +20,22 @@ class TeleInfoFrame:
             self.meter_state_code = ''
         else:
             self._update_data(tele_info_frame_json)
+
+    @staticmethod
+    def from_raw_data(values: Tuple):
+        frame = TeleInfoFrame()
+        frame.timestamp = values[0]
+        frame.meter_identifier = values[1]
+        frame.subscription_type = values[2]
+        frame.subscription_power_in_a = values[3]
+        frame.total_base_index_in_wh = values[4]
+        frame.current_pricing_period = values[5]
+        frame.instantaneous_intensity_in_a = values[6]
+        frame.intensity_max_in_a = values[7]
+        frame.power_consumption_in_va = values[8]
+        frame.peak_off_peak_schedule = values[9]
+        frame.meter_state_code = values[10]
+        return frame
 
     def _update_data(self, tele_info_frame_json: str):
         json_data = json.loads(tele_info_frame_json)

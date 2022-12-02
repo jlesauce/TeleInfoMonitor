@@ -1,6 +1,7 @@
 import logging
 from typing import List
 
+import numpy as np
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
 from matplotlib.figure import Figure
 
@@ -18,6 +19,10 @@ class PowerUsagePlotView(FigureCanvasQTAgg):
         figure = Figure()
         self.axes = figure.add_subplot(111)
         super(PowerUsagePlotView, self).__init__(figure)
+
+        self.axes.set_xlabel('Time')
+        self.axes.set_ylabel('Current Intensity (A)')
+        self.axes.set_title('Power Usage')
 
         self.xdata = list(range(self.DEFAULT_NUM_OF_X_ELEMENTS))
         intensity_values = [frame.instantaneous_intensity_in_a for frame in self.tele_info_frames]

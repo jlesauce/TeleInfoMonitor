@@ -31,27 +31,12 @@
      <x>80</x>
      <y>50</y>
      <width>451</width>
-     <height>301</height>
+     <height>308</height>
     </rect>
    </property>
    <layout class="QGridLayout" name="gridLayout">
-    <item row="2" column="1">
-     <widget class="QSpinBox" name="port_spinner">
-      <property name="font">
-       <font>
-        <pointsize>12</pointsize>
-       </font>
-      </property>
-      <property name="maximum">
-       <number>99999</number>
-      </property>
-      <property name="value">
-       <number>0</number>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QLineEdit" name="ip_address_text_editor">
+    <item row="4" column="1">
+     <widget class="QLineEdit" name="database_name_text_editor">
       <property name="font">
        <font>
         <pointsize>12</pointsize>
@@ -60,7 +45,7 @@
      </widget>
     </item>
     <item row="2" column="0">
-     <widget class="QLabel" name="port_label">
+     <widget class="QLabel" name="server_port_label">
       <property name="font">
        <font>
         <pointsize>12</pointsize>
@@ -71,8 +56,46 @@
       </property>
      </widget>
     </item>
+    <item row="9" column="0" colspan="2">
+     <widget class="QDialogButtonBox" name="ok_cancel_button_box">
+      <property name="sizePolicy">
+       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
+        <horstretch>0</horstretch>
+        <verstretch>0</verstretch>
+       </sizepolicy>
+      </property>
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="standardButtons">
+       <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0" colspan="2">
+     <spacer name="spacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item row="1" column="1">
+     <widget class="QLineEdit" name="server_ip_address_text_editor">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
     <item row="1" column="0">
-     <widget class="QLabel" name="ip_address_label">
+     <widget class="QLabel" name="server_ip_address_label">
       <property name="font">
        <font>
         <pointsize>12</pointsize>
@@ -85,17 +108,17 @@
      </widget>
     </item>
     <item row="3" column="0" colspan="2">
-     <spacer name="verticalSpacer">
-      <property name="orientation">
-       <enum>Qt::Vertical</enum>
+     <widget class="QLabel" name="database_config_title_label">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <bold>true</bold>
+       </font>
       </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>20</width>
-        <height>40</height>
-       </size>
+      <property name="text">
+       <string>Database Configuration:</string>
       </property>
-     </spacer>
+     </widget>
     </item>
     <item row="0" column="0" colspan="2">
      <widget class="QLabel" name="server_config_title_label">
@@ -119,19 +142,96 @@
       </property>
      </widget>
     </item>
-    <item row="4" column="0" colspan="2">
-     <widget class="QDialogButtonBox" name="ok_cancel_button_box">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Preferred" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
+    <item row="4" column="0">
+     <widget class="QLabel" name="database_name_label">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
       </property>
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
+      <property name="text">
+       <string>Database Name:</string>
       </property>
-      <property name="standardButtons">
-       <set>QDialogButtonBox::Apply|QDialogButtonBox::Cancel|QDialogButtonBox::Ok</set>
+     </widget>
+    </item>
+    <item row="6" column="0">
+     <widget class="QLabel" name="database_password_label">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Password:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="6" column="1">
+     <widget class="QLineEdit" name="database_password_text_editor">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="1">
+     <widget class="QLineEdit" name="database_user_text_editor">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+     </widget>
+    </item>
+    <item row="2" column="1">
+     <widget class="QSpinBox" name="server_port_spinner">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="maximum">
+       <number>99999</number>
+      </property>
+      <property name="value">
+       <number>0</number>
+      </property>
+     </widget>
+    </item>
+    <item row="5" column="0">
+     <widget class="QLabel" name="database_user_label">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>User:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="0">
+     <widget class="QLabel" name="database_port_label">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Port:</string>
+      </property>
+     </widget>
+    </item>
+    <item row="7" column="1">
+     <widget class="QSpinBox" name="database_port_spinner">
+      <property name="font">
+       <font>
+        <pointsize>12</pointsize>
+       </font>
+      </property>
+      <property name="maximum">
+       <number>99999</number>
       </property>
      </widget>
     </item>
