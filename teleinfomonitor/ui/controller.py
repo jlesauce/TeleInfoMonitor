@@ -2,8 +2,9 @@ import logging
 from datetime import datetime
 from typing import List
 
+from PyQt6 import QtCore
 from PyQt6.QtCore import QSettings
-from PyQt6.QtWidgets import QMessageBox
+from PyQt6.QtWidgets import QMessageBox, QApplication
 
 from teleinfomonitor.database.database_controller import DatabaseController
 from teleinfomonitor.io.socket_client import SocketClient
@@ -37,6 +38,7 @@ class Controller:
             logger.info('Start reception of TeleInfo data from remote server')
 
             try:
+                self.set_waiting_cursor(True)
                 settings: QSettings = self.model.settings
                 self.tele_info_transmission_client = SocketClient(host_name=settings.value('server/ip_address'),
                                                                   port=settings.value('server/port'))
@@ -47,6 +49,8 @@ class Controller:
                 logger.error(e)
                 self.show_error_message(f'Connection to server failed: {e}')
                 self.tele_info_transmission_client = None
+            finally:
+                self.set_waiting_cursor(False)
         else:
             logger.warning('Reception of TeleInfo data is already running')
 
@@ -60,6 +64,7 @@ class Controller:
     def connect_to_database(self):
         try:
             if not self.database_controller.is_database_connected():
+                self.set_waiting_cursor(True)
                 logger.info('Connect to database')
                 self.database_controller.connect_to_database()
                 self.view.set_connected_to_database_state()
@@ -68,6 +73,8 @@ class Controller:
         except Exception as e:
             logger.error(f'Connection to database failed: {e}')
             self.show_error_message(f'Connection to database failed: {e}')
+        finally:
+            self.set_waiting_cursor(False)
 
     @staticmethod
     def show_error_message(message: str, title='Oups!'):
@@ -76,6 +83,13 @@ class Controller:
         box.setText(message)
         box.setIcon(QMessageBox.Icon.Critical)
         box.exec()
+
+    @staticmethod
+    def set_waiting_cursor(is_enable: bool):
+        if is_enable:
+            QApplication.setOverrideCursor(QtCore.Qt.CursorShape.WaitCursor)
+        else:
+            QApplication.restoreOverrideCursor()
 
     def _init_event_listeners(self):
         self.view.add_event_listener(self.close_application, MainWindow.EVENT_ID_ON_CLOSE_BUTTON_CLICKED)
@@ -102,8 +116,20 @@ class Controller:
 
     def _on_day_power_usage_selected(self, selected_day: datetime):
         tele_info_frames = self._retrieve_tele_info_frames_by_date(selected_day)
-        self.view.update_day_power_usage_plot_view(tele_info_frames)
+        if tele_info_frames:
+            self.view.update_day_power_usage_plot_view(tele_info_frames)
 
     def _retrieve_tele_info_frames_by_date(self, date: datetime) -> List[TeleInfoFrame]:
-        logger.info(f'Retrieve TeleInfo frames by date: {date}')
-        return self.database_controller.retrieve_tele_info_frames_by_date(date)
+        try:
+            if self.database_controller.is_database_connected():
+                self.set_waiting_cursor(True)
+                logger.info(f'Retrieve TeleInfo frames by date: {date}')
+                self.set_waiting_cursor(True)
+                return self.database_controller.retrieve_tele_info_frames_by_date(date)
+            else:
+                logger.warning('Not connected to database')
+        except Exception as e:
+            logger.error(f'Database access failed: {e}')
+            self.show_error_message(f'Database access failed: {e}')
+        finally:
+            self.set_waiting_cursor(False)

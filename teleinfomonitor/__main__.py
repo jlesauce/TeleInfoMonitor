@@ -40,11 +40,14 @@ def _parse_data_from_file(data_file: Path) -> list[TeleInfoFrame]:
 
 
 def _create_ui(model: Model):
-    application = QApplication(sys.argv[:1])
-    view = MainWindow(model, application)
-    controller = Controller(model, view)
-    controller.start_application()
-    sys.exit(application.exec())
+    try:
+        application = QApplication(sys.argv[:1])
+        view = MainWindow(model, application)
+        controller = Controller(model, view)
+        controller.start_application()
+        sys.exit(application.exec())
+    except Exception as e:
+        logger.error(f'An error occurred creating the UI: {e}')
 
 
 def _parse_arguments():
